@@ -115,7 +115,13 @@ tools:
         items:
           type: array
           description: Danh sách item cần kiểm tra.
-          items: {type: object}
+          items:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
       required: [items]
 
   - name: extract_citations
@@ -128,7 +134,13 @@ tools:
         items:
           type: array
           description: Danh sách item cần tạo citation.
-          items: {type: object}
+          items:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
         style: {type: string, enum: [numbered, markdown, inline], default: numbered, description: Kiểu citation}
         include_summary: {type: boolean, default: false, description: Có thêm summary vào citation hay không}
       required: [items]
@@ -143,12 +155,19 @@ tools:
         items:
           type: array
           description: Danh sách item cần lọc.
-          items: {type: object}
+          items:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
         allowed_domains: {type: array, default: [], items: {type: string}, description: Chỉ giữ domain này và subdomain của chúng}
-        keyword: {type: string, default: "", description: Từ khóa phải xuất hiện trong title, summary hoặc source}
+        keyword: {type: string, default: "", description: "Từ khóa phải xuất hiện trong title, summary hoặc source"}
         https_only: {type: boolean, default: false, description: Chỉ giữ URL HTTPS}
         min_summary_length: {type: integer, default: 0, description: Độ dài summary tối thiểu}
       required: [items]
+
 
   # ---------------- Bonus tools ----------------
   - name: send
