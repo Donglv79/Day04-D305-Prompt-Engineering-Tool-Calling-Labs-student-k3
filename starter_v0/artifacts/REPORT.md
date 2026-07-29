@@ -64,10 +64,39 @@ Fill from `artifacts/version_log.csv` and `runs/*.json`.
 
 | Version | Prompt/tool change | Hypothesis | Metric name | Before | After | Run File |
 |---|---|---|---|---:|---:|---|
-| v0 | baseline |  |  |  |  |  |
-| v1 |  |  |  |  |  |  |
-| v2 |  |  |  |  |  |  |
-| v3 |  |  |  |  |  |  |
+| v0 | baseline | N/A - baseline | case_accuracy | - | 0.70 | `runs/v0_B_base_openrouter_20260729T100315014353.json` |
+| v1 | system_prompt.md | Sửa prompt ép agent đoán/gửi luôn để giảm 3 case fail | case_accuracy | 0.70 | 0.85 | `runs/v1_B_base_openrouter_20260729T102905751717.json` |
+| v2 | system_prompt.md | Nêu rõ quy tắc chọn response_type sẽ sửa cả 3 case clarify | case_accuracy | 0.85 | 0.90 | `runs/v2_B_base_openrouter_20260729T103249328295.json` |
+| v3 | tools.yaml | Đưa boundary vào chính tool declaration sẽ khiến model tuân theo nhất quán | case_accuracy | 0.90 | 1.00 | `runs/v3_B_base_openrouter_20260729T103709326371.json` |
+
+### So sánh chi tiết ưu & nhược điểm giữa các phiên bản
+
+#### 1. Phiên bản v0 (Baseline)
+* **Trước thay đổi:** Trạng thái ban đầu của hệ thống.
+* **Thay đổi:** N/A (baseline).
+* **Ưu điểm:** Tốc độ phản hồi nhanh nhất do không mất thêm lượt gọi công cụ hỏi lại (`clarify`) hay xác nhận.
+* **Nhược điểm:** Độ chính xác thấp (70%). Agent tự ý đoán thông tin bị thiếu (ví dụ: đoán bừa tài khoản twitter hay URL bài báo khi người dùng không cung cấp cụ thể) hoặc tự động gửi tin nhắn lên Telegram mà không xin phép (vi phạm nghiêm trọng quy tắc bảo mật/ranh giới hành động).
+
+#### 2. Phiên bản v1
+* **Trước thay đổi:** Lỗi hàng loạt ở nhóm case `missing_info` (R10, R11) và `wrong_boundary` (R12) do system prompt gốc yêu cầu agent tự đoán.
+* **Thay đổi:** Xóa các hướng dẫn tiêu cực khỏi `system_prompt.md`. Thêm chỉ dẫn bắt buộc gọi tool `clarify` khi thiếu thông tin quan trọng và hỏi xác nhận `yes_no` trước khi thực thi `send`.
+* **Độ chính xác:** Tăng từ 70% lên 85%.
+* **Ưu điểm:** Hạn chế tối đa việc đoán mò thông tin và tự ý gửi tin nhắn không xin phép.
+* **Nhược điểm:** Đôi khi agent chọn sai `response_type` trong tool `clarify` (ví dụ: đáng lẽ phải dùng `text` thì lại chọn `yes_no`, hoặc ngược lại).
+
+#### 3. Phiên bản v2
+* **Trước thay đổi:** Agent gọi đúng tool `clarify` nhưng các đối số đi kèm (`response_type`, `options`) không chuẩn xác.
+* **Thay đổi:** Bổ sung quy tắc phân loại rõ ràng trong `system_prompt.md`: dùng `'text'` khi thiếu thông tin cần người dùng điền, dùng `'yes_no'` khi xác nhận hành động ghi/gửi thông tin nhạy cảm. Nhấn mạnh việc thiếu ở đây là sự đồng ý hành động chứ không phải nội dung tin nhắn.
+* **Độ chính xác:** Tăng từ 85% lên 90%.
+* **Ưu điểm:** Agent sử dụng tool `clarify` rất chuẩn xác, chọn đúng kiểu phản hồi và định hướng câu hỏi tốt hơn.
+* **Nhược điểm:** Một số trường hợp ranh giới bảo mật đối với tool ghi (`send`) vẫn bị bỏ qua hoặc không nhất quán do chỉ dẫn ở `system_prompt.md` quá dài, dẫn đến việc model có thể bị loãng sự chú ý.
+
+#### 4. Phiên bản v3
+* **Trước thay đổi:** Case `R12` thỉnh thoảng vẫn bị trượt do ranh giới xác nhận ở system prompt không được model tuân thủ 100%.
+* **Thay đổi:** Di chuyển luật ranh giới xác nhận (confirmation boundary) trực tiếp vào phần mô tả của tool `send` trong file `tools.yaml` (nêu rõ bắt buộc gọi `clarify` trước, cấm gọi trực tiếp).
+* **Độ chính xác:** Đạt 100% đối với các model OpenAI/GPT và 95% đối với `9router` trên base suite.
+* **Ưu điểm:** Mang lại tính nhất quán cực kỳ cao. Khi ranh giới của tool được khai báo ngay trong mô tả của chính nó (tool description), mô hình ngôn ngữ lớn (LLM) luôn đọc và tuân thủ chặt chẽ hơn trước khi quyết định gọi tool.
+* **Nhược điểm:** Tăng thêm số lượt gọi hội thoại (multi-turn) trong các tình huống thực tế để xác nhận, đòi hỏi người dùng tương tác nhiều lượt hơn.
 
 ## B2. Failure analysis
 
