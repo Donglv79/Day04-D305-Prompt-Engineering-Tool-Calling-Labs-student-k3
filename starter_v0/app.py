@@ -38,7 +38,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Safe styling for Header Badges & Tool Call Cards
+# Custom Styling
 st.markdown(
     """
     <style>
@@ -76,6 +76,25 @@ st.markdown(
         font-weight: bold;
         margin-left: 6px;
     }
+
+    .pass-tag {
+        background-color: rgba(16, 185, 129, 0.2);
+        color: #34d399;
+        border: 1px solid #10b981;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.82rem;
+    }
+    .fail-tag {
+        background-color: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        border: 1px solid #ef4444;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.82rem;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -111,7 +130,6 @@ with st.sidebar:
 
     st.divider()
 
-    # Load Artifacts dynamically
     system_prompt_path = ARTIFACTS_DIR / "system_prompt.md"
     tools_yaml_path = ARTIFACTS_DIR / "tools.yaml"
 
@@ -125,21 +143,19 @@ with st.sidebar:
 
     artifact_version = build_artifact_version(version_label, system_prompt_path, tools_yaml_path)
 
-    # Transcript session initialization
     if not st.session_state.transcript_id:
         timestamp = datetime.now().strftime("%Y%m%dT%H%M%S%f")
         st.session_state.transcript_id = f"{safe_slug(version_label)}_{safe_slug(provider_name)}_{timestamp}"
 
     transcript_path = TRANSCRIPTS_DIR / f"{st.session_state.transcript_id}.transcript.json"
 
-    # Quick View Artifact Details
     with st.expander("📄 System Prompt Inspector", expanded=False):
         st.code(system_prompt, language="markdown")
 
     with st.expander(f"🛠️ Loaded Tools ({len(tool_declarations)})", expanded=False):
         for tool in tool_declarations:
             name = tool.get('name')
-            is_new = "NEW" if name == "dedupe_sources" else ""
+            is_new = "NEW" if name in ["dedupe_sources", "source_quality_check", "extract_citations", "filter_sources"] else ""
             badge_html = '<span class="new-tool-badge">NEW</span>' if is_new else ''
             st.markdown(f"**`{name}`** {badge_html}: {tool.get('description')}", unsafe_allow_html=True)
 
@@ -194,11 +210,9 @@ tab_chat, tab_trace, tab_benchmark, tab_transcript = st.tabs([
 ])
 
 with tab_chat:
-    # Display Chat History
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
-            # Display tool traces if attached to assistant message
             if "tool_events" in message and message["tool_events"]:
                 with st.expander(f"🔧 Execution Trace ({len(message['tool_events'])} tool calls)", expanded=False):
                     for idx, event in enumerate(message["tool_events"], 1):
@@ -208,7 +222,6 @@ with tab_chat:
                         st.markdown(f"**Call #{idx}: `{tool_name}`**")
                         st.json({"args": args, "result": result})
 
-    # Chat Input Box
     if user_input := st.chat_input("Nhập câu hỏi hoặc yêu cầu nghiên cứu của bạn..."):
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.chat_message("user"):
@@ -316,7 +329,7 @@ with tab_trace:
                     st.divider()
 
 with tab_benchmark:
-    st.subheader("📊 Lịch Sử Tối Ưu Phiên Bản (v0 ➔ v3)")
+    st.subheader("📊 Lịch Sử Tối Ưu Phiên Bản & Tra Cứu Test Cases")
     version_csv_path = ARTIFACTS_DIR / "version_log.csv"
 
     if version_csv_path.exists():
@@ -355,16 +368,69 @@ with tab_benchmark:
         st.warning("Chưa tìm thấy file version_log.csv")
 
     st.divider()
-    st.markdown("### 📁 Evaluated Run Logs (JSON Files)")
-    run_files = list(RUNS_DIR.glob("*.json")) if RUNS_DIR.exists() else []
+    st.markdown("### 🧪 Tra Cứu Trực Tiếp Test Cases Từ Run Logs")
+    run_files = sorted(list(RUNS_DIR.glob("*.json")), reverse=True) if RUNS_DIR.exists() else []
+
     if run_files:
-        selected_run = st.selectbox("Chọn Run File để xem chi tiết:", run_files, format_func=lambda p: p.name)
+        selected_run = st.selectbox("Chọn Run Log để soi từng Test Case:", run_files, format_func=lambda p: p.name)
         if selected_run:
             try:
                 run_data = json.loads(selected_run.read_text(encoding="utf-8"))
-                st.json(run_data.get("summary", {}))
-                with st.expander("Xem toàn bộ JSON Run Log", expanded=False):
-                    st.json(run_data)
+                summary = run_data.get("summary", {})
+
+                # Summary Bar for Selected Run
+                rc1, rc2, rc3, rc4 = st.columns(4)
+                rc1.metric("Case Accuracy", f"{summary.get('case_accuracy', 0)*100:.0f}%")
+                rc2.metric("Tool Routing", f"{summary.get('tool_routing_accuracy', 0)*100:.0f}%")
+                rc3.metric("Arg Accuracy", f"{summary.get('argument_accuracy', 0)*100:.0f}%")
+                rc4.metric("Passed Cases", f"{summary.get('passed_cases', summary.get('total_cases'))}/{summary.get('total_cases')}")
+
+                results_list = run_data.get("results", [])
+                st.markdown(f"#### 📌 Danh Sách {len(results_list)} Test Cases Trong File")
+
+                # Filter options
+                filter_status = st.radio("Lọc Test Cases:", ["Tất cả", "Chỉ trường hợp PASS 🟢", "Chỉ trường hợp FAIL 🔴"], horizontal=True)
+
+                for item in results_list:
+                    eval_id = item.get("id", item.get("eval_id", "Unknown ID"))
+                    res = item.get("result", {})
+                    # True evaluation status check
+                    is_passed = res.get("passed", res.get("pass_all", False))
+                    failures = res.get("failures", [])
+                    actual_calls = res.get("actual_tool_calls", [])
+
+                    if filter_status == "Chỉ trường hợp PASS 🟢" and not is_passed:
+                        continue
+                    if filter_status == "Chỉ trường hợp FAIL 🔴" and is_passed:
+                        continue
+
+                    status_html = '<span class="pass-tag">🟢 PASS (Đạt 100%)</span>' if is_passed else '<span class="fail-tag">🔴 FAIL</span>'
+
+                    with st.expander(f"{status_html} &nbsp; Case **`{eval_id}`** (Phase {item.get('phase', 'B')})", expanded=not is_passed):
+                        st.markdown(f"**Test Intent / Meta:** {item.get('metadata', {}).get('what_it_tests', 'N/A')}")
+                        st.markdown(f"**User Prompt:** *\"{item.get('input', '')}\"*")
+                        
+                        col_c1, col_c2 = st.columns(2)
+                        with col_c1:
+                            st.markdown("**Expected Behavior:**")
+                            st.json(item.get("expect", {}))
+                        with col_c2:
+                            st.markdown("**Actual Tool Calls:**")
+                            st.json(actual_calls)
+
+                        if not is_passed:
+                            st.markdown(f"**Failure Type:** `{item.get('failure_type')}`")
+                            if failures:
+                                st.markdown("**🔴 Chi tiết Lỗi (Failures):**")
+                                st.error("\n".join(failures))
+                            if res.get("observed_mismatch"):
+                                st.markdown("**⚠️ Observed Mismatch:**")
+                                st.warning(str(res.get("observed_mismatch")))
+
+                        if res.get("tool_results"):
+                            with st.expander("Xem Tool Execution Results của case này"):
+                                st.json(res.get("tool_results"))
+
             except Exception as e:
                 st.error(f"Không thể đọc run file: {e}")
 
