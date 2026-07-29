@@ -107,12 +107,12 @@ tools:
 
   # ---------------- Bonus tools ----------------
   - name: send
-    description: "Gửi một đoạn văn bản đi."
+    description: "Gửi một đoạn văn bản đi (ví dụ đăng lên Telegram). Đây là hành động không thể hoàn tác trên kênh thật. Confirmation boundary: KHÔNG gọi tool này trước khi hỏi xác nhận. Trước tiên phải gọi clarify(response_type='yes_no') để hỏi người dùng có đồng ý gửi hay không — không phải hỏi nội dung là gì. Chỉ gọi send với confirmed=true sau khi người dùng đã trả lời đồng ý."
     parameters:
       type: object
       properties:
         text: {type: string, default: "", description: "Nội dung"}
-        confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
+        confirmed: {type: boolean, default: false, description: "true chỉ khi người dùng đã đồng ý qua clarify(response_type='yes_no')"}
       required: [text]
 
   - name: policy
