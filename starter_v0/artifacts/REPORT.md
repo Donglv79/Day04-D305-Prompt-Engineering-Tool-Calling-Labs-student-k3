@@ -19,10 +19,6 @@
 
 Research Agent hỗ trợ tìm kiếm tin tức công nghệ đa nguồn (Web, Twitter/X, bài báo khoa học arXiv), đọc và trích xuất tài liệu nội bộ, đồng thời hỗ trợ tổng hợp thông tin và gửi bản tin tự động lên kênh Telegram sau khi được xác nhận.
 
-**Link dùng thử (truy cập được trong showdown):**
-
-> URL: http://localhost:8501
-
 ## A2. Tool agent có
 
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
