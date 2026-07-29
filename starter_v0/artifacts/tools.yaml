@@ -38,13 +38,19 @@ tools:
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: 'Tìm kiếm thông tin trên web. Dùng cho tin tức, sự kiện hoặc thông tin
+      công khai trên Internet. Với tin tức, giữ query là chủ đề ngắn gọn;
+      không thêm các từ "news", "today", "latest" vào query.
+      Dùng topic=news và timeframe để biểu diễn loại tin và khoảng thời gian.
+      Ví dụ: "Tin AI hôm nay" phải gọi query="AI", topic="news",
+      timeframe="day".'
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
+        query: {type: string, default: "", description: 'Chủ đề tìm kiếm ngắn gọn, không chứa từ chỉ thời gian hoặc loại nội dung.
+            Ví dụ: "AI", "robotics", "OpenAI".'}
+        topic: {type: string, enum: [general, news], default: "general", description: 'Dùng news khi người dùng hỏi tin tức; nếu không thì dùng general.'}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Chỉ dùng cho news: hôm nay=day, tuần này=week, tháng này=month, năm nay=year."}
         max_results: {type: integer, default: 5, description: "Số kết quả"}
       required: [query]
 
@@ -76,6 +82,28 @@ tools:
         template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuôn"}
         headline: {type: string, default: "", description: "Tiêu đề"}
       required: [items, template]
+
+  - name: dedupe_sources
+    description: >
+      Loại bỏ các nguồn trùng trong danh sách kết quả nghiên cứu và giữ lại
+      bản ghi xuất hiện đầu tiên. Dùng sau lookup, social_search hoặc fetch
+      khi có nhiều kết quả cần làm sạch trước khi format. Các URL có tham số
+      tracking như utm_* được xem là cùng một nguồn.
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Danh sách item nghiên cứu cần loại bỏ bản trùng.
+          items:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
+              section: {type: string}
+      required: [items]
 
   # ---------------- Bonus tools ----------------
   - name: send
