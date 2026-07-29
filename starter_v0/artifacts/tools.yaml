@@ -105,6 +105,51 @@ tools:
               section: {type: string}
       required: [items]
 
+  - name: source_quality_check
+    description: >
+      Kiểm tra chất lượng metadata của các research item đã có. Đánh giá URL,
+      HTTPS, title, summary và source; không tải nội dung mới và không sửa item.
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Danh sách item cần kiểm tra.
+          items: {type: object}
+      required: [items]
+
+  - name: extract_citations
+    description: >
+      Tạo citation từ các research item đã có. Dùng khi cần xuất danh sách
+      nguồn thành numbered, markdown hoặc inline citation; không tự bịa nguồn.
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Danh sách item cần tạo citation.
+          items: {type: object}
+        style: {type: string, enum: [numbered, markdown, inline], default: numbered, description: Kiểu citation}
+        include_summary: {type: boolean, default: false, description: Có thêm summary vào citation hay không}
+      required: [items]
+
+  - name: filter_sources
+    description: >
+      Lọc các research item đã có theo domain, keyword, HTTPS và độ dài
+      summary. Dùng để giới hạn nguồn trước khi dedupe hoặc format; không fetch.
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Danh sách item cần lọc.
+          items: {type: object}
+        allowed_domains: {type: array, default: [], items: {type: string}, description: Chỉ giữ domain này và subdomain của chúng}
+        keyword: {type: string, default: "", description: Từ khóa phải xuất hiện trong title, summary hoặc source}
+        https_only: {type: boolean, default: false, description: Chỉ giữ URL HTTPS}
+        min_summary_length: {type: integer, default: 0, description: Độ dài summary tối thiểu}
+      required: [items]
+
   # ---------------- Bonus tools ----------------
   - name: send
     description: "Gửi một đoạn văn bản đi (ví dụ đăng lên Telegram). Đây là hành động không thể hoàn tác trên kênh thật. Confirmation boundary: KHÔNG gọi tool này trước khi hỏi xác nhận. Trước tiên phải gọi clarify(response_type='yes_no') để hỏi người dùng có đồng ý gửi hay không — không phải hỏi nội dung là gì. Chỉ gọi send với confirmed=true sau khi người dùng đã trả lời đồng ý."
