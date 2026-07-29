@@ -66,10 +66,36 @@ Dữ liệu được trích xuất trực tiếp từ `artifacts/version_log.csv
 
 | Version | Prompt/tool change | Hypothesis | Metric name | Before | After | Run File |
 |---|---|---|---|---:|---:|---|
-| v0 | Baseline | Baseline trước khi tối ưu | case_accuracy | - | 0.70 | `runs/v0_B_base_openrouter_20260729T100315014353.json` |
-| v1 | `system_prompt.md` | Xóa câu "đoán bừa", yêu cầu hỏi clarify khi thiếu tin | case_accuracy | 0.70 | 0.85 | `runs/v1_B_base_openrouter_20260729T102905751717.json` |
-| v2 | `system_prompt.md` | Quy định rõ chọn `response_type='text'` hay `'yes_no'` | case_accuracy | 0.85 | 0.90 | `runs/v2_B_base_openrouter_20260729T103249328295.json` |
-| v3 | `tools.yaml` | Khóa **Confirmation Boundary** trực tiếp trong description `send` | case_accuracy | 0.90 | 1.00 | `runs/v3_B_base_openrouter_20260729T103709326371.json` |
+| v0 | baseline | Baseline trước khi tối ưu; system prompt gốc dặn agent đoán bừa | case_accuracy | - | 0.70 | `runs/v0_B_base_openrouter_20260729T100315014353.json` |
+| v1 | `system_prompt.md` | Xóa câu "đoán bừa", dặn ép gọi clarify khi thiếu tin / xin phép trước khi send | case_accuracy | 0.70 | 0.85 | `runs/v1_B_base_openrouter_20260729T102905751717.json` |
+| v2 | `system_prompt.md` | Nêu rõ quy tắc chọn response_type ('text' cho thông tin, 'yes_no' cho xác nhận) | case_accuracy | 0.85 | 0.90 | `runs/v2_B_base_openrouter_20260729T103249328295.json` |
+| v3 | `tools.yaml` | Đưa confirmation boundary vào chính tool declaration của `send` | case_accuracy | 0.90 | 1.00 | `runs/v3_B_base_openrouter_20260729T103709326371.json` |
+
+### So sánh chi tiết ưu & nhược điểm giữa các phiên bản
+
+#### 1. Phiên bản v0 (Baseline)
+* **Trạng thái:** Baseline ban đầu của hệ thống.
+* **Độ chính xác:** 70%.
+* **Ưu điểm:** Tốc độ phản hồi nhanh do không mất lượt gọi hỏi lại (`clarify`).
+* **Nhược điểm:** Tự đoán thông tin bị thiếu và tự ý gửi tin nhắn lên Telegram mà không xin phép (vi phạm ranh giới hành động nhạy cảm).
+
+#### 2. Phiên bản v1
+* **Thay đổi:** Xóa hướng dẫn tiêu cực khỏi `system_prompt.md`. Thêm chỉ dẫn bắt buộc gọi tool `clarify` khi thiếu thông tin và hỏi `yes_no` trước khi `send`.
+* **Độ chính xác:** Tăng từ 70% lên 85%.
+* **Ưu điểm:** Hạn chế tối đa việc đoán mò thông tin và tự ý gửi tin nhắn không xin phép.
+* **Nhược điểm:** Đôi khi chọn sai `response_type` trong tool `clarify` (ví dụ: dùng `text` thay vì `yes_no`).
+
+#### 3. Phiên bản v2
+* **Thay đổi:** Bổ sung quy tắc phân loại `response_type`: dùng `'text'` khi thiếu thông tin, dùng `'yes_no'` khi xin phép xác nhận hành động `send`.
+* **Độ chính xác:** Tăng từ 85% lên 90%.
+* **Ưu điểm:** Agent gọi `clarify` chuẩn xác hơn, chọn đúng kiểu phản hồi.
+* **Nhược điểm:** Một số trường hợp ranh giới bảo mật đối với tool ghi (`send`) vẫn bị lỡ do chỉ dẫn ở `system_prompt.md` quá dài.
+
+#### 4. Phiên bản v3
+* **Thay đổi:** Di chuyển luật ranh giới xác nhận (Confirmation Boundary) trực tiếp vào phần `description` của tool `send` trong file `tools.yaml`.
+* **Độ chính xác:** Đạt 100% điểm tuyệt đối.
+* **Ưu điểm:** Tính nhất quán cực cao. Khi ranh giới của tool được khai báo ngay trong mô tả của chính nó (tool declaration), LLM luôn tuân thủ chặt chẽ hơn.
+* **Nhược điểm:** Tăng thêm lượt gọi tương tác đa lượt (multi-turn) để hỏi xác nhận.
 
 ## B2. Failure analysis
 

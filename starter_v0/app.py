@@ -305,6 +305,8 @@ with tab_chat:
                     "turns": st.session_state.turns_log,
                 }
                 write_transcript(transcript_path, transcript_payload)
+                st.rerun()
+
 
 with tab_trace:
     st.subheader("🔍 Chi Tiết Trace Từng Tool Fired Trong Session")
