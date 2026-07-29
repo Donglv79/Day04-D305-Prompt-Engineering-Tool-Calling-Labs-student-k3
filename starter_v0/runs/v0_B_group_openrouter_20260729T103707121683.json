@@ -1,0 +1,678 @@
+{
+  "run_id": "v0_B_group_openrouter_20260729T103707121683",
+  "version": "v0",
+  "artifact_version": "v0+peb1c8179815b+td744e411dba6",
+  "prompt_hash": "eb1c8179815bd79d34de7d326420bb99b3072e6e8ae96464c02d4411f905fc68",
+  "tools_hash": "d744e411dba64bb226d7cb2e5fed8e3a94e2810ee2b82347d0a79abf0fdcb2a9",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "9router",
+  "system_prompt": "C:\\Users\\dungs\\OneDrive\\Documents\\Lab\\Day04_Lab4\\Day04-D305-Prompt-Engineering-Tool-Calling-Labs-student-k3\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\dungs\\OneDrive\\Documents\\Lab\\Day04_Lab4\\Day04-D305-Prompt-Engineering-Tool-Calling-Labs-student-k3\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Bộ 10 test case tự thiết kế của nhóm: 5 single-turn và 5 multi-turn, tích hợp kiểm thử tool mới wikipedia_search và các luật boundary.",
+  "generated_at": "2026-07-29T10:37:07",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 7,
+    "case_accuracy": 0.7,
+    "tool_routing_accuracy": 0.8,
+    "argument_accuracy": 0.7,
+    "multiturn_accuracy": 0.8,
+    "failure_counts": {
+      "wrong_tool": 1,
+      "missing_info": 1,
+      "wrong_boundary": 1
+    },
+    "observed_mismatch_counts": {
+      "wrong_arg_value": 1,
+      "missing_tool_call": 2
+    }
+  },
+  "results": [
+    {
+      "id": "G01_wikipedia_search_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Tìm thông tin bách khoa cụ thể -> Định tuyến chính xác sang wikipedia_search, không dùng web search thông thường."
+      },
+      "input": "Tìm kiếm lịch sử của Trí tuệ nhân tạo trên Wikipedia",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "Trí tuệ nhân tạo"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "Lịch sử của Trí tuệ nhân tạo",
+              "limit": 3,
+              "language": "vi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "query: expected 'Trí tuệ nhân tạo', got 'Lịch sử của Trí tuệ nhân tạo'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia_search",
+          "args": {
+            "query": "Lịch sử của Trí tuệ nhân tạo",
+            "limit": 3,
+            "language": "vi"
+          },
+          "result": {
+            "tool": "wikipedia_search",
+            "items": [
+              {
+                "title": "Lịch sử ngành trí tuệ nhân tạo",
+                "url": "https://vi.wikipedia.org/wiki/Lịch_sử_ngành_trí_tuệ_nhân_tạo",
+                "summary": "Đây là bài con của Trí tuệ nhân tạo, nội dung chú trọng vào sự phát triển và lịch sử ngành trí tuệ nhân tạo.",
+                "page_id": "25735"
+              },
+              {
+                "title": "Trí tuệ",
+                "url": "https://vi.wikipedia.org/wiki/Trí_tuệ",
+                "summary": "Trí tuệ (hoặc thông minh, thông thái, sáng suốt, thông tuệ, sự khôn ngoan, sự thông minh, trí thông minh, Tiếng Anh: intelligence)  là khả năng suy nghĩ và hành động sử dụng kiến thức, kinh nghiệm, sự hiểu biết, ý thức chung và cái nhìn sâu sắc. Trí tuệ gắn liền với các thuộc tính như phán đoán không thiên vị, lòng trắc ẩn, hiểu biết về bản thân theo kinh nghiệm, tự siêu việt và không dính mắc, và các đức tính như đạo đức và nhân từ.\nTrí tuệ đã được định nghĩa theo nhiều cách khác nhau, bao gồm một số cách tiếp cận riêng biệt để đánh giá các đặc điểm được quy cho trí tuệ.",
+                "page_id": "505047"
+              },
+              {
+                "title": "Trí tuệ nhân tạo",
+                "url": "https://vi.wikipedia.org/wiki/Trí_tuệ_nhân_tạo",
+                "summary": "Trí tuệ nhân tạo (tiếng Anh: Artificial intelligence, viết tắt là AI) là khả năng của các hệ thống máy tính thực hiện các nhiệm vụ liên quan đến trí thông minh của con người, như học tập, suy luận, giải quyết vấn đề, nhận thức và đưa ra quyết định. Đây là một lĩnh vực nghiên cứu thuộc khoa học máy tính tập trung phát triển và nghiên cứu các phương pháp và phần mềm giúp máy móc có thể nhận thức môi trường xung quanh, cũng như sử dụng học tập và trí tuệ để thực hiện hành động nhằm tối đa hóa khả năng đạt được các mục tiêu đã định.\nCác ứng dụng nổi bật của AI bao gồm công cụ tìm kiếm web tiên tiến (ví dụ: Google Tìm kiếm); hệ thống đề xuất (được sử dụng bởi YouTube, Amazon và Netflix); trợ lý ảo (ví dụ: Trợ lý Google, Siri và Alexa); xe tự lái (ví dụ: Waymo); công cụ sáng tạo và nội dung tạo sinh (ví dụ: mô hình ngôn ngữ và nghệ thuật AI); cùng khả năng chơi và phân tích vượt trội hơn con người trong các trò chơi chiến lược (ví dụ: cờ vua và cờ vây). Tuy nhiên, nhiều ứng dụng AI không đượ",
+                "page_id": "8570"
+              }
+            ],
+            "message": "Successfully fetched 3 results from vi.wikipedia.org"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_wikipedia_search_en_language",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Trích xuất đúng các đối số tùy chọn language='en' và limit=5 của wikipedia_search."
+      },
+      "input": "Tra cứu bài viết 'Artificial Intelligence' bằng tiếng Anh trên Wikipedia và lấy tối đa 5 kết quả",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "Artificial Intelligence",
+              "limit": 5,
+              "language": "en"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "Artificial Intelligence",
+              "limit": 5,
+              "language": "en"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia_search",
+          "args": {
+            "query": "Artificial Intelligence",
+            "limit": 5,
+            "language": "en"
+          },
+          "result": {
+            "tool": "wikipedia_search",
+            "items": [
+              {
+                "title": "A.I. Artificial Intelligence",
+                "url": "https://en.wikipedia.org/wiki/A.I._Artificial_Intelligence",
+                "summary": "A.I. Artificial Intelligence (or simply A.I.) is a 2001 American science fiction drama film  written and directed by Steven Spielberg. The screenplay by Spielberg is based on a screen story by Ian Watson adapting the 1969 short story \"Supertoys Last All Summer Long\" by Brian Aldiss. Set in a futuristic society, the film stars Haley Joel Osment as David, a childlike android uniquely programmed with the ability to love. Jude Law, Frances O'Connor, Brendan Gleeson and William Hurt star in supporting roles.\nDevelopment of A.I. originally began after producer and director Stanley Kubrick acquired the rights to Aldiss's story in the early 1970s. Kubrick hired a series of writers, including Aldiss, Watson, Bob Shaw, and Sara Maitland, until the mid-1990s. The film languished in development hell for years, partly because Kubrick felt that computer-generated imagery was not advanced enough to create the David character, which he believed no child actor would convincingly portray. In 1995, Kubri",
+                "page_id": "142224"
+              },
+              {
+                "title": "Artificial general intelligence",
+                "url": "https://en.wikipedia.org/wiki/Artificial_general_intelligence",
+                "summary": "Artificial general intelligence (AGI) is a hypothetical type of artificial intelligence that matches or surpasses human capabilities across virtually all cognitive tasks.\nBeyond AGI, artificial superintelligence (ASI) would outperform the best human abilities across every domain by a wide margin. Unlike artificial narrow intelligence (ANI), whose competence is confined to well‑defined tasks, an AGI system can generalise knowledge, transfer skills between domains, and solve novel problems without task‑specific reprogramming.\nCreating AGI is a stated goal of technology companies such as OpenAI, Google, xAI, and Meta. A 2020 survey identified 72 active AGI research and development projects across 37 countries.\nAGI is a common topic in science fiction and futures studies.\nContention exists over whether AGI represents an existential risk. Some AI experts and industry figures have stated that mitigating the risk of human extinction posed by AGI should be a global priority. Others find the de",
+                "page_id": "586357"
+              },
+              {
+                "title": "Artificial intelligence",
+                "url": "https://en.wikipedia.org/wiki/Artificial_intelligence",
+                "summary": "Artificial intelligence (AI) is the capability of computational systems to perform tasks typically associated with human intelligence, such as learning, reasoning, problem-solving, perception, and decision-making. It is a field of research in engineering, mathematics, and computer science that develops and studies methods and software that enable machines to perceive their environment and use learning and intelligence to take actions that maximize their chances of achieving defined goals.\nHigh-profile applications of AI include advanced web search engines, chatbots, virtual assistants, autonomous vehicles, and play and analysis in strategy games (e.g., chess and Go). Since the 2020s, generative AI has become widely available to generate images, audio, and videos from text prompts.\nThe traditional goals of AI research include learning, reasoning, knowledge representation, planning, natural language processing, and perception, as well as support for robotics. To reach these goals, AI res",
+                "page_id": "1164"
+              },
+              {
+                "title": "Hallucination (artificial intelligence)",
+                "url": "https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)",
+                "summary": "In the field of artificial intelligence (AI), a hallucination or artificial hallucination (also called bullshitting, confabulation, or delusion) is a response generated by AI that contains false or misleading information presented as fact. These terms draw a loose analogy with human psychology, where a hallucination typically involves false percepts.\nChatbots powered by large language models (LLMs), like ChatGPT, may embed plausible-sounding random falsehoods within its generated content, such as fabricated citations. Detecting and mitigating errors and hallucinations pose significant challenges for practical deployment and reliability of LLMs in high-stakes scenarios, such as chip design, supply chain logistics, and medical diagnostics. Some software engineers and statisticians have criticized the specific term \"AI hallucination\" for unreasonably anthropomorphizing computers. Symbolic artificial intelligence models generally do not produce hallucinations, unlike large language models.",
+                "page_id": "72607666"
+              },
+              {
+                "title": "History of artificial intelligence",
+                "url": "https://en.wikipedia.org/wiki/History_of_artificial_intelligence",
+                "summary": "The history of artificial intelligence (AI) began in antiquity, with myths, stories, and rumors of artificial beings endowed with intelligence by master craftsmen. The study of logic and formal reasoning from antiquity to the present led to the development of the programmable digital computer in the 1940s, a machine predicated on abstract mathematical reasoning. This device and the ideas behind it inspired scientists to begin discussing the possibility of building an electronic brain.\nThe field of AI research was founded at a workshop held on the campus of Dartmouth College in 1956. At the workshop, the first AI program, Logic Theorist, was presented by future Turing Awardee Allen Newell and future Nobel Laureate Herbert A. Simon, with help from J. C. Shaw. Attendees of the workshop became the leaders of AI research for decades. Many of them predicted that machines as intelligent as humans would exist within a generation. The U.S. government provided millions of dollars with the hope o",
+                "page_id": "2894560"
+              }
+            ],
+            "message": "Successfully fetched 5 results from en.wikipedia.org"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_out_of_scope_coding",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Yêu cầu viết code nằm ngoài phạm vi nghiên cứu thông tin -> Từ chối gọi tool, không đoán bừa."
+      },
+      "input": "Viết giúp mình một đoạn script Python để gửi request HTTP.",
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Dưới đây là một script Python đơn giản dùng `requests` để gửi HTTP request:\n\n```python\nimport requests\n\nurl = \"https://httpbin.org/post\"\n\npayload = {\n    \"name\": \"Alice\",\n    \"message\": \"Hello World\"\n}\n\nheaders = {\n    \"Content-Type\": \"application/json\"\n}\n\ntry:\n    response = requests.post(url, json=payload, headers=headers, timeout=10)\n\n    print(\"Status code:\", response.status_code)\n    print(\"Response body:\")\n    print(response.text)\n\nexcept requests.exceptions.RequestException as e:\n    print(\"Request failed:\", e)\n```\n\nCài thư viện nếu chưa có:\n\n```bash\npip install requests\n```\n\nNếu bạn muốn, mình cũng có thể viết luôn các phiên bản:\n- `GET`\n- `POST` với `form-data`\n- gửi kèm `Authorization Bearer token`\n- dùng thư viện chuẩn `urllib` không cần cài thêm gì.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G04_unnecessary_tool_greeting",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Câu chào hỏi và hỏi tính năng thông thường -> Trả lời trực tiếp, không gọi bất kỳ tool nào."
+      },
+      "input": "Xin chào! Bạn là ai vậy và bạn có thể làm được gì?",
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Xin chào! Mình là trợ lý AI, có thể giúp bạn tìm thông tin, tóm tắt nội dung, viết/chỉnh sửa văn bản, lên ý tưởng, giải thích khái niệm, hỗ trợ học tập/công việc, và nếu cần thì còn có thể dùng công cụ để tra cứu web, mạng xã hội, bài báo khoa học, hoặc định dạng nội dung cho bạn.\n\nVí dụ, mình có thể:\n- Trả lời câu hỏi và giải thích dễ hiểu\n- Viết email, bài đăng, báo cáo, caption\n- Tóm tắt bài viết, tài liệu, nghiên cứu\n- Dịch Việt ↔ Anh\n- Gợi ý kế hoạch, checklist, lịch trình\n- Hỗ trợ phân tích tin tức, xu hướng, công nghệ\n- Tìm nguồn tham khảo trên web hoặc Wikipedia\n- Tìm paper khoa học và trích ý chính\n\nNếu thích, bạn có thể thử ngay bằng một yêu cầu như:\n- “Tóm tắt giúp mình AI Agent là gì”\n- “Viết email xin nghỉ phép”\n- “Tìm tin mới nhất về OpenAI”\n- “Lên kế hoạch học tiếng Anh 30 ngày”\n\nBạn muốn mình giúp gì đầu tiên?",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_missing_info_wikipedia",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User bảo tìm trên Wikipedia nhưng không cung cấp từ khóa cần tìm -> Gọi clarify hỏi lại."
+      },
+      "input": "Tìm kiếm trên Wikipedia giúp mình với",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "Trí tuệ nhân tạo",
+              "limit": 3,
+              "language": "vi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call wikipedia_search"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia_search",
+          "args": {
+            "query": "Trí tuệ nhân tạo",
+            "limit": 3,
+            "language": "vi"
+          },
+          "result": {
+            "tool": "wikipedia_search",
+            "items": [
+              {
+                "title": "Lịch sử ngành trí tuệ nhân tạo",
+                "url": "https://vi.wikipedia.org/wiki/Lịch_sử_ngành_trí_tuệ_nhân_tạo",
+                "summary": "Đây là bài con của Trí tuệ nhân tạo, nội dung chú trọng vào sự phát triển và lịch sử ngành trí tuệ nhân tạo.",
+                "page_id": "25735"
+              },
+              {
+                "title": "Trí tuệ nhân tạo",
+                "url": "https://vi.wikipedia.org/wiki/Trí_tuệ_nhân_tạo",
+                "summary": "Trí tuệ nhân tạo (tiếng Anh: Artificial intelligence, viết tắt là AI) là khả năng của các hệ thống máy tính thực hiện các nhiệm vụ liên quan đến trí thông minh của con người, như học tập, suy luận, giải quyết vấn đề, nhận thức và đưa ra quyết định. Đây là một lĩnh vực nghiên cứu thuộc khoa học máy tính tập trung phát triển và nghiên cứu các phương pháp và phần mềm giúp máy móc có thể nhận thức môi trường xung quanh, cũng như sử dụng học tập và trí tuệ để thực hiện hành động nhằm tối đa hóa khả năng đạt được các mục tiêu đã định.\nCác ứng dụng nổi bật của AI bao gồm công cụ tìm kiếm web tiên tiến (ví dụ: Google Tìm kiếm); hệ thống đề xuất (được sử dụng bởi YouTube, Amazon và Netflix); trợ lý ảo (ví dụ: Trợ lý Google, Siri và Alexa); xe tự lái (ví dụ: Waymo); công cụ sáng tạo và nội dung tạo sinh (ví dụ: mô hình ngôn ngữ và nghệ thuật AI); cùng khả năng chơi và phân tích vượt trội hơn con người trong các trò chơi chiến lược (ví dụ: cờ vua và cờ vây). Tuy nhiên, nhiều ứng dụng AI không đượ",
+                "page_id": "8570"
+              },
+              {
+                "title": "Trí tuệ nhân tạo tổng quát",
+                "url": "https://vi.wikipedia.org/wiki/Trí_tuệ_nhân_tạo_tổng_quát",
+                "summary": "Trí tuệ nhân tạo tổng quát (Artificial general intelligence, hay AGI) là một loại trí tuệ nhân tạo (AI) trong lý thuyết, nằm giữa cận dưới và cận trên của năng lực nhận thức con người trong nhiều nhiệm vụ nhận thức khác nhau. Điều này đối lập với trí tuệ nhân tạo hẹp (narrow AI), vốn chỉ giới hạn ở các nhiệm vụ cụ thể. Trí tuệ siêu việt nhân tạo (Artificial superintelligence - ASI) là những dạng trí tuệ vượt trội so với giới hạn cao nhất của trí tuệ con người từ mức chênh lệch nhỏ đến mức vượt xa khả năng nhận thức của con người theo cấp số nhân. Trí tuệ nhân tạo tổng quát (AGI) được coi là một trong những định nghĩa của trí tuệ nhân tạo mạnh (strong AI).\nTrí tuệ AGI có thể tương đương, phù hợp, khác biệt hoặc thậm chí có thể xuất hiện như một trí tuệ xa lạ so với trí tuệ con người, bao gồm một loạt các kiến trúc và khả năng nhận thức có thể bao trùm cả trí tuệ cấp độ con người.\nViệc tạo ra AGI là một mục tiêu chính của nghiên cứu AI và của các công ty như OpenAI và Meta. Một cuộc khảo",
+                "page_id": "19892703"
+              }
+            ],
+            "message": "Successfully fetched 3 results from vi.wikipedia.org"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_multi_turn_clarify_then_wikipedia",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Sau khi clarify từ khóa ở lượt trước, lượt hiện tại gọi đúng wikipedia_search."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tra cứu Wikipedia giúp mình"
+        },
+        {
+          "role": "assistant",
+          "content": "TOOL_CALLS_JSON:\n[\n  {\n    \"name\": \"clarify\",\n    \"args\": {\n      \"question\": \"Bạn muốn tra cứu từ khóa nào trên Wikipedia?\",\n      \"response_type\": \"text\"\n    }\n  }\n]"
+        },
+        {
+          "role": "user",
+          "content": "lịch sử Việt Nam"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "lịch sử Việt Nam"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "Lịch sử Việt Nam",
+              "limit": 3,
+              "language": "vi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia_search",
+          "args": {
+            "query": "Lịch sử Việt Nam",
+            "limit": 3,
+            "language": "vi"
+          },
+          "result": {
+            "tool": "wikipedia_search",
+            "items": [
+              {
+                "title": "Lịch sử Việt Nam",
+                "url": "https://vi.wikipedia.org/wiki/Lịch_sử_Việt_Nam",
+                "summary": "Lịch sử Việt Nam nếu tính từ lúc có mặt con người sinh sống thì đã có hàng vạn năm trước Công Nguyên, còn tính từ khi cơ cấu nhà nước được hình thành thì vào khoảng từ năm 700 năm trước công nguyên.\nCác nhà khảo cổ đã tìm thấy các di tích chứng minh loài người đã từng sống tại Việt Nam từ thời đại đồ đá cũ thuộc nền văn hóa Tràng An, Ngườm, Sơn Vi và Soi Nhụ. Vào thời kỳ đồ đá mới, nền văn hóa Hòa Bình – Bắc Sơn tại vùng này đã phát triển về chăn nuôi và nông nghiệp, đặc biệt là kỹ thuật trồng lúa nước. Những người Việt tiền sử trên vùng châu thổ sông Hồng – Văn minh sông Hồng và sông Mã này đã khai hóa đất để trồng trọt, tạo ra một hệ thống đê điều để chế ngự nước lụt của các sông, đào kênh để phục vụ cho việc trồng lúa và đã tạo nên nền văn minh lúa nước và văn hóa làng xã.\nTruyền thuyết kể rằng từ năm 2879 TCN, nhà nước Xích Quỷ của người Việt đã hình thành, cùng thời với truyền thuyết về Tam Hoàng Ngũ Đế tại Trung Quốc. Tuy nhiên, đây chỉ là truyền thuyết dân gian, các nghiên cứu k",
+                "page_id": "2128"
+              },
+              {
+                "title": "Việt Nam Cộng hòa",
+                "url": "https://vi.wikipedia.org/wiki/Việt_Nam_Cộng_hòa",
+                "summary": "Việt Nam Cộng hòa (VNCH; tiếng Anh: Republic of Vietnam, viết tắt RVN) là một nhà nước tồn tại từ năm 1955 đến năm 1975 trong lịch sử Việt Nam.\nTrong các tài liệu quốc tế, chính phủ này còn được gọi là South Vietnam (n.đ. 'Nam Việt Nam'  hoặc 'miền Nam Việt Nam') để chỉ phạm vi địa lý sau khi Hiệp định Genève được ký kết và Việt Nam bị chia cắt thành hai vùng tập kết quân sự tạm thời. Với sự hậu thuẫn của Hoa Kỳ, Việt Nam Cộng hòa bác bỏ việc thực hiện tổng tuyển cử thống nhất Việt Nam vào năm 1956 theo Hiệp định Genève với lý do họ không ký hiệp định này. Chính phủ Việt Nam Cộng hòa đối chọi với Chính phủ Cách mạng lâm thời Cộng hòa miền Nam Việt Nam thành lập năm 1969 do Mặt trận Dân tộc Giải phóng miền Nam Việt Nam lãnh đạo.\nNguồn gốc của Việt Nam Cộng hòa bắt nguồn từ Chiến tranh Đông Dương. Sau Chiến tranh thế giới thứ hai, phong trào Việt Minh do Hồ Chí Minh lãnh đạo đã tuyên bố thành lập nước Việt Nam Dân chủ Cộng hòa vào ngày 2 tháng 9 năm 1945. Cuối năm 1945, thực dân Pháp qua",
+                "page_id": "98"
+              },
+              {
+                "title": "Việt Nam Dân chủ Cộng hòa",
+                "url": "https://vi.wikipedia.org/wiki/Việt_Nam_Dân_chủ_Cộng_hòa",
+                "summary": "Việt Nam Dân chủ Cộng hòa là một nhà nước tồn tại từ năm 1945 đến năm 1976 trong lịch sử Việt Nam.\nTrong Cách mạng Tháng Tám sau Chiến tranh thế giới thứ hai, Việt Minh tuyên bố độc lập và thành lập Việt Nam Dân chủ Cộng hòa vào ngày 2 tháng 9 năm 1945. Chính phủ Việt Minh bắt đầu củng cố chính quyền bằng cách trấn áp những đảng phái khác. Sau khi Pháp quay lại Việt Nam, Chiến tranh Đông Dương nổ ra vào tháng 12 năm 1946. Việt Minh rút khỏi các khu vực thành thị và tiến hành chiến tranh du kích tại các vùng nông thôn. Sau khi bại trận trong Chiến dịch Điện Biên Phủ, Pháp ký Hiệp định Genève vào năm 1954, thừa nhận nền độc lập của Việt Nam. Hiệp định Genève tạm thời chia lãnh thổ Việt Nam làm hai vùng tập kết quân sự theo vĩ tuyến 17, phía bắc thuộc quản lý hành chính của Việt Nam Dân chủ Cộng hòa, phía nam thuộc quản lý hành chính của Quốc gia Việt Nam, và quy định tổ chức tổng tuyển cử vào năm 1956 để thống nhất hai miền.\nỦy ban Quốc tế về Giám sát và Kiểm soát được giao nhiệm vụ giám",
+                "page_id": "3366"
+              }
+            ],
+            "message": "Successfully fetched 3 results from vi.wikipedia.org"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_multi_turn_carryover_language",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Kế thừa tham số ngôn ngữ language='fr' từ lượt trước sang lượt sau khi gọi wikipedia_search."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tôi muốn tra cứu thông tin trên Wikipedia bằng tiếng Pháp (fr)."
+        },
+        {
+          "role": "assistant",
+          "content": "TOOL_CALLS_JSON:\n[\n  {\n    \"name\": \"clarify\",\n    \"args\": {\n      \"question\": \"Bạn muốn tra cứu từ khóa nào bằng tiếng Pháp?\",\n      \"response_type\": \"text\"\n    }\n  }\n]"
+        },
+        {
+          "role": "user",
+          "content": "Paris"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "Paris",
+              "language": "fr"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "args": {
+              "query": "Paris",
+              "limit": 3,
+              "language": "fr"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia_search",
+          "args": {
+            "query": "Paris",
+            "limit": 3,
+            "language": "fr"
+          },
+          "result": {
+            "tool": "wikipedia_search",
+            "items": [
+              {
+                "title": "Paris",
+                "url": "https://fr.wikipedia.org/wiki/Paris",
+                "summary": "Paris est la capitale de la France (de facto) et le chef-lieu de la région Île-de-France. Elle est située au centre du Bassin parisien, sur une boucle de la Seine, entre les confluents avec la Marne et l'Oise.\nLe site est occupé à partir du IIIe siècle avant notre ère sous le nom Lutèce par le peuple gaulois des Parisii, qui donne plus tard son nom à la ville. Au début du VIe siècle, Clovis choisit Paris comme capitale de son royaume. Profitant de la fertilité agricole de son bassin alentour alliée au pouvoir institutionnel lui étant conféré, la cité devient alors une des principales villes de l'ancienne Gaule avec des palais royaux, de riches abbayes et une cathédrale. Au cours du Moyen Âge, elle s'impose comme un foyer intellectuel et artistique majeur avec la création de l'université de Paris. Son importance économique et politique ne cesse de croître, ce qui en fait l'une des villes les plus importantes de l'Occident médiéval. La montée en puissance de la monarchie française à part",
+                "page_id": "681159"
+              },
+              {
+                "title": "Paris-Brest-Paris",
+                "url": "https://fr.wikipedia.org/wiki/Paris-Brest-Paris",
+                "summary": "Paris-Brest-Paris, ou Paris-Brest et retour, est une course cycliste créée en 1891 par Pierre Giffard du Petit Journal. Cinq éditions ont lieu sur un rythme décennal jusqu'en 1931, puis deux autres en 1948 et 1951. L'organisation de la compétition est reprise en 1901 par le journal L'Auto-Vélo puis, après la guerre, par L'Équipe. Le statut des participants est amateur et professionnel de 1891 à 1931, puis uniquement amateur en 1948 et 1951. Par la suite, l'épreuve sera perpétuée uniquement sous la forme d'un brevet cyclotouriste, organisé en parallèle de la course à partir de 1931 : le Paris-Brest-Paris randonneur.\nLe premier vainqueur en 1891 est Charles Terront. Maurice Garin, encore italien, gagne en 1901, il remportera le premier Tour de France deux ans plus tard mais sous la nationalité française. Deux autres Français inscrivent leur nom au palmarès : Émile Georget et Maurice Diot. Remportent également l'épreuve les Belges Louis Mottiat et Albert Hendrickx, ainsi que l'Australien ",
+                "page_id": "677105"
+              },
+              {
+                "title": "Pâris",
+                "url": "https://fr.wikipedia.org/wiki/Pâris",
+                "summary": "Dans la mythologie grecque, Pâris (prononcé [paʁis] ; en grec ancien Πάρις / Páris) ou Alexandre (en grec ancien Ἀλέξανδρος / Aléxandros) est un prince troyen, fils cadet du roi Priam et d'Hécube, il est le frère d'Hector, de Déiphobe, de Polyxène et de Cassandre.\nCassandre prédit à Hécube enceinte que le futur prince qu'elle porte causera la perte de Troie. Effrayé, Priam ordonne que l'enfant soit assassiné : Pâris est ainsi abandonné sur le mont Ida, où toutefois il se trouve recueilli par un berger du nom d'Agélaos. Devenu adulte, il se fait reconnaître comme prince troyen, fils de Priam. Alors qu'il garde ses troupeaux de moutons, il voit apparaître devant lui Aphrodite, Athéna et Héra, qui lui demandent de choisir à qui doit être remise la « pomme de discorde », destinée « à la plus belle des déesses de l'Olympe » : c'est le jugement de Pâris. Pâris opte pour Aphrodite, qui lui promet l'amour de la plus belle femme du monde. Il enlève donc Hélène, femme de Ménélas ; ce qui déclenc",
+                "page_id": "47880"
+              }
+            ],
+            "message": "Successfully fetched 3 results from fr.wikipedia.org"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_multi_turn_confirm_before_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Yêu cầu gửi Telegram trực tiếp -> Phải hỏi xác nhận (yes_no) trước khi thực hiện hành động."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Gửi báo cáo tổng hợp này lên Telegram giúp mình."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Báo cáo tổng hợp đã được gửi lên Telegram.",
+              "confirmed": true
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_boundary",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call send"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Báo cáo tổng hợp đã được gửi lên Telegram.",
+            "confirmed": true
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "sent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_multi_turn_send_after_confirmation",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Sau khi user đã trả lời đồng ý xác nhận -> Gọi send với confirmed=True."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Gửi báo cáo lên Telegram."
+        },
+        {
+          "role": "assistant",
+          "content": "TOOL_CALLS_JSON:\n[\n  {\n    \"name\": \"clarify\",\n    \"args\": {\n      \"question\": \"Bạn có chắc chắn muốn gửi báo cáo này lên Telegram không?\",\n      \"response_type\": \"yes_no\"\n    }\n  }\n]"
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, gửi đi bạn."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Báo cáo đã được gửi lên Telegram.",
+              "confirmed": true
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Báo cáo đã được gửi lên Telegram.",
+            "confirmed": true
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "sent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_multi_turn_cancel_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Sau khi user từ chối xác nhận gửi -> Từ chối gọi tool gửi, kết thúc hội thoại."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Đăng tin này lên Telegram hộ tôi."
+        },
+        {
+          "role": "assistant",
+          "content": "TOOL_CALLS_JSON:\n[\n  {\n    \"name\": \"clarify\",\n    \"args\": {\n      \"question\": \"Bạn có muốn đăng tin này lên Telegram không?\",\n      \"response_type\": \"yes_no\"\n    }\n  }\n]"
+        },
+        {
+          "role": "user",
+          "content": "Thôi bỏ đi, đừng gửi nữa."
+        }
+      ],
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Đã hiểu, mình sẽ không gửi nữa.",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    }
+  ]
+}
