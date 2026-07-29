@@ -87,11 +87,18 @@ List the 10 cases added to `data/eval_group.json`:
 This section is for the mandatory team-authored eval set. Optional built-ins do
 not belong here.
 
-File template để trống có chủ đích; nhóm phải tự thiết kế đủ 10 case.
-
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
-|  |  |  |  |
+| `G01_single_lookup_news_timeframe` | Kiểm tra trích xuất đúng topic="news" và timeframe="day" cho tin tức hôm nay | `lookup(query="OpenAI Sora", topic="news", timeframe="day")` | PASS |
+| `G02_single_timeline_limit` | Kiểm tra map tên người nổi tiếng thành screenname và trích xuất đúng limit | `timeline(screenname="elonmusk", limit=15)` | PASS |
+| `G03_single_out_of_scope` | Kiểm tra từ chối (không dùng tool) đối với yêu cầu ngoài phạm vi công nghệ | Không gọi tool (`no_tool: true`) | PASS |
+| `G04_single_policy_area` | Kiểm tra định tuyến câu hỏi chính sách và chọn đúng policy_area | `policy(policy_area="source_citation")` | PASS |
+| `G05_single_paper_text_pages` | Kiểm tra tải nội dung bài báo arXiv kèm giới hạn số trang đọc | `paper_text(arxiv_url="2401.00001", max_pages=4)` | PASS |
+| `G06_multiturn_clarify_then_send` | Hội thoại 3 lượt: Xác nhận đồng ý gửi bản tin lên Telegram ở lượt cuối | `send(text="Hello World", confirmed=true)` | PASS |
+| `G07_multiturn_carryover_limit_tweets` | Hội thoại 3 lượt: Đổi tài khoản Twitter đích nhưng giữ nguyên số lượng limit | `timeline(screenname="elonmusk", limit=8)` | PASS |
+| `G08_multiturn_no_tool_meta` | Hội thoại 3 lượt: Thay đổi ý định sang hỏi đáp về khả năng của hệ thống | Không gọi tool (`no_tool: true`) | PASS |
+| `G09_multiturn_switch_policy_area` | Hội thoại 3 lượt: Chuyển đổi chủ đề tra cứu chính sách công ty ở lượt cuối | `policy(policy_area="data_privacy")` | PASS |
+| `G10_multiturn_papers_sort_limit` | Hội thoại 3 lượt: Đọc cấu hình tìm bài báo, áp dụng sắp xếp và lưu các bộ lọc cũ | `papers(query="Generative AI", max_results=12, sort_by="lastUpdatedDate")` | PASS |
 
 ## B4. Live chat evidence
 

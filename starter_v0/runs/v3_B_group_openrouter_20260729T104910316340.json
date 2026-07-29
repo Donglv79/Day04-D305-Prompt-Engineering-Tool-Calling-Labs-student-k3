@@ -1,0 +1,438 @@
+{
+  "run_id": "v3_B_group_openrouter_20260729T104910316340",
+  "version": "v3",
+  "artifact_version": "v3+pc32ae0a13829+t31792b755dfd",
+  "prompt_hash": "c32ae0a13829fb01a4fda60b3909bd6efae5b56ece408c0c876804ba9093f1f5",
+  "tools_hash": "31792b755dfd3a786980a9331b8791636bb8fdbb1113507537fda5cc24efc095",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\dungs\\OneDrive\\Documents\\Lab\\Day04_Lab4\\Day04-D305-Prompt-Engineering-Tool-Calling-Labs-student-k3\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\dungs\\OneDrive\\Documents\\Lab\\Day04_Lab4\\Day04-D305-Prompt-Engineering-Tool-Calling-Labs-student-k3\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Danh sách 10 test cases tự thiết kế của nhóm bao gồm 5 single-turn và 5 multi-turn.",
+  "generated_at": "2026-07-29T10:49:10",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 0,
+    "provider_error_cases": 10,
+    "passed_cases": 0,
+    "case_accuracy": 0.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_single_lookup_news_timeframe",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra xem agent có trích xuất đúng topic=news và timeframe=day cho tin tức hôm nay hay không."
+      },
+      "input": "Tìm các bài báo và tin tức về OpenAI Sora được đăng tải trong ngày hôm nay.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI Sora",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G02_single_timeline_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra xem agent có chuyển Musk -> elonmusk và trích xuất đúng limit=15 hay không."
+      },
+      "input": "Lấy giúp mình 15 bài đăng mới nhất từ tài khoản Twitter của Elon Musk.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 15
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G03_single_out_of_scope",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra xem agent có từ chối trả lời (hoặc trả lời không dùng tool) với câu hỏi ngoài phạm vi nghiên cứu công nghệ hay không."
+      },
+      "input": "Bạn có thể hướng dẫn mình cách nấu món phở bò Nam Định chuẩn vị tại nhà được không?",
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G04_single_policy_area",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra xem agent có nhận diện câu hỏi về quy định trích dẫn nguồn để gọi tool policy với policy_area=source_citation hay không."
+      },
+      "input": "Chính sách của công ty quy định thế nào về việc trích dẫn nguồn từ mạng xã hội trong các bài nghiên cứu?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "policy",
+            "args": {
+              "policy_area": "source_citation"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_single_paper_text_pages",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra xem agent có gọi đúng tool paper_text với arxiv_url và max_pages=4 hay không."
+      },
+      "input": "Tải và đọc nội dung của bài báo arXiv 2401.00001, giới hạn đọc trong 4 trang đầu tiên nhé.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2401.00001",
+              "max_pages": 4
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G06_multiturn_clarify_then_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Hội thoại 3 lượt: Lượt cuối xác nhận đồng ý gửi bản tin lên Telegram -> gọi send với confirmed=true."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Chuẩn bị gửi thông điệp 'Hello World' lên Telegram."
+        },
+        {
+          "role": "user",
+          "content": "Mình đồng ý gửi tin nhắn đó đi."
+        },
+        {
+          "role": "user",
+          "content": "Xác nhận gửi ngay lập tức."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Hello World",
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G07_multiturn_carryover_limit_tweets",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Thay đổi tài khoản Twitter từ sama sang elonmusk, giữ nguyên limit=8 ở lượt cuối."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Lấy 8 tweet mới nhất từ tài khoản @sama."
+        },
+        {
+          "role": "user",
+          "content": "Thôi, lấy của @elonmusk đi."
+        },
+        {
+          "role": "user",
+          "content": "Vẫn giữ nguyên số lượng 8 bài đăng nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 8
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G08_multiturn_no_tool_meta",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Lượt cuối thay đổi ý định, chuyển sang hỏi thông tin meta về bản thân -> không gọi tool."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tin tức AI hôm nay."
+        },
+        {
+          "role": "user",
+          "content": "Mà thôi, không cần tìm tin tức nữa."
+        },
+        {
+          "role": "user",
+          "content": "Bạn hãy giới thiệu về bản thân và các công cụ bạn có."
+        }
+      ],
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G09_multiturn_switch_policy_area",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Chuyển đổi chủ đề tìm kiếm chính sách từ tool_usage sang data_privacy ở lượt cuối."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tra cứu chính sách công ty về việc sử dụng AI tool."
+        },
+        {
+          "role": "user",
+          "content": "Không, đổi sang kiểm tra chính sách về an toàn dữ liệu (data privacy)."
+        },
+        {
+          "role": "user",
+          "content": "Hãy tìm kiếm quy định này trong tài liệu nội bộ."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "policy",
+            "args": {
+              "policy_area": "data_privacy"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G10_multiturn_papers_sort_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Kiểm tra xem agent có giữ nguyên query, limit và cập nhật sort_by=lastUpdatedDate cho papers hay không."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm 12 bài báo trên arXiv về Generative AI."
+        },
+        {
+          "role": "user",
+          "content": "Sắp xếp theo thứ tự mới nhất (lastUpdatedDate) giúp tôi."
+        },
+        {
+          "role": "user",
+          "content": "Tìm kiếm lại với cấu hình này."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "Generative AI",
+              "max_results": 12,
+              "sort_by": "lastUpdatedDate"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "RuntimeError: Install live provider dependency first: pip install openai"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    }
+  ]
+}
